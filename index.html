@@ -15,10 +15,8 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      /* Prevent horizontal scroll */
     }
 
-    /* Container for top-left '23' and top banner */
     .top-bar {
       display: flex;
       align-items: stretch;
@@ -28,12 +26,11 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 140px; /* Taller banner height */
+      height: 140px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.8);
       z-index: 1100;
     }
 
-    /* Small fixed '23' box top-left */
     .number-box {
       width: 140px;
       height: 140px;
@@ -52,7 +49,6 @@
       cursor: default;
     }
 
-    /* Banner next to '23' box */
     header {
       flex-grow: 1;
       background: url('https://raw.githubusercontent.com/thedeucetrey/main/main/b6ef7d3a-fa47-4b7d-9e66-6f0c4cfe01fd.png') no-repeat left center;
@@ -81,12 +77,11 @@
       text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
     }
 
-    /* Left toolbar starting below banner */
     nav {
       position: fixed;
-      top: 140px; /* Start under banner */
+      top: 140px;
       left: 0;
-      width: 140px; /* align with number box width */
+      width: 140px;
       height: calc(100vh - 140px);
       background: #1a1a1a;
       box-shadow: 2px 0 6px rgba(0,0,0,0.7);
@@ -111,7 +106,6 @@
       color: #f9a7a7;
     }
 
-    /* Main content shifting right */
     main {
       margin-top: 140px;
       margin-left: 140px;
@@ -119,46 +113,75 @@
       background: #222;
       height: calc(100vh - 140px);
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* Video container styling */
-    .video-container {
-      background: #2d2d2d;
-      padding: 20px;
+    /* Grid for thumbnails */
+    #thumbnail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 18px;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .thumbnail {
+      position: relative;
+      cursor: pointer;
       border-radius: 10px;
-      margin-bottom: 25px;
-      max-width: 650px;
-      box-shadow: 0 0 14px rgba(233, 119, 119, 0.6);
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(233, 119, 119, 0.5);
       transition: box-shadow 0.3s ease;
     }
-    .video-container:hover {
+    .thumbnail:hover {
       box-shadow: 0 0 30px rgba(233, 119, 119, 1);
     }
-    .video-title { 
-      font-size: 1.7rem; 
-      margin-bottom: 12px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      color: #f9a7a7;
-      text-shadow: 1px 1px 2px #661212;
-    }
-    iframe { 
-      border-radius: 10px; 
-      width: 100%; 
-      height: 360px; 
-      max-width: 650px;
+    .thumbnail img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
       display: block;
     }
-    .tags {
-      margin: 12px 0;
-      font-weight: 500;
-      font-size: 1.05rem;
-      color: #f8d7d7;
+    .thumbnail .title-overlay {
+      position: absolute;
+      bottom: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      color: #f9a7a7;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 6px 10px;
+      width: 100%;
+      box-sizing: border-box;
       letter-spacing: 0.5px;
     }
-    .tags b {
-      color: #e66363;
-      text-shadow: 1px 1px 3px #3a0d0d;
+
+    /* Video player panel */
+    #video-player-container {
+      margin-top: 30px;
+      background: #2d2d2d;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 680px;
+      box-shadow: 0 0 20px rgba(233, 119, 119, 0.8);
+      display: none; /* Hidden initially */
+      flex-direction: column;
+      color: #f8d7d7;
+      user-select: none;
+    }
+
+    #video-player-container iframe {
+      border-radius: 10px;
+      width: 100%;
+      height: 360px;
+    }
+    #video-info {
+      margin-top: 15px;
+    }
+    #video-info div {
+      margin: 8px 0;
+      font-size: 1.1rem;
     }
     .like-btn {
       background: #e97777;
@@ -200,8 +223,21 @@
     <a href="#">Settings</a>
   </nav>
 
-  <main id="content">
-    <!-- Videos will load here -->
+  <main>
+    <div id="thumbnail-grid">
+      <!-- Thumbnails inserted here -->
+    </div>
+
+    <div id="video-player-container">
+      <iframe id="video-player" src="" frameborder="0" allowfullscreen></iframe>
+      <div id="video-info">
+        <div id="video-title"></div>
+        <div id="video-tags"></div>
+        <div id="video-performer"></div>
+        <div id="video-studio"></div>
+        <button class="like-btn" id="like-button">Like 👍</button>
+      </div>
+    </div>
   </main>
 
   <script>
@@ -209,6 +245,7 @@
       {
         title: "Example Video 1",
         src: "https://www.youtube.com/embed/ysz5S6PUM-U",
+        thumbnail: "https://img.youtube.com/vi/ysz5S6PUM-U/hqdefault.jpg",
         tags: "POV, MILF",
         performer: "Jane Doe",
         studio: "EvilAngel"
@@ -216,36 +253,68 @@
       {
         title: "Example Video 2",
         src: "https://www.youtube.com/embed/tgbNymZ7vqY",
+        thumbnail: "https://img.youtube.com/vi/tgbNymZ7vqY/hqdefault.jpg",
         tags: "Anal, Blonde",
         performer: "Alexia Gold",
         studio: "Brazzers"
       }
     ];
 
-    function loadVideos() {
-      const contentDiv = document.getElementById('content');
-      contentDiv.innerHTML = '';
-      videos.forEach((v, i) => {
-        const videoHTML = `
-          <div class="video-container">
-            <div class="video-title">${v.title}</div>
-            <iframe src="${v.src}" frameborder="0" allowfullscreen></iframe>
-            <div class="tags">Tags: <b>${v.tags}</b></div>
-            <div class="tags">Performer: <b>${v.performer}</b></div>
-            <div class="tags">Studio: <b>${v.studio}</b></div>
-            <button class="like-btn" onclick="likeVideo(${i})">Like 👍</button>
-          </div>
-        `;
-        contentDiv.insertAdjacentHTML('beforeend', videoHTML);
+    const thumbnailGrid = document.getElementById('thumbnail-grid');
+    const videoPlayerContainer = document.getElementById('video-player-container');
+    const videoPlayer = document.getElementById('video-player');
+    const videoTitle = document.getElementById('video-title');
+    const videoTags = document.getElementById('video-tags');
+    const videoPerformer = document.getElementById('video-performer');
+    const videoStudio = document.getElementById('video-studio');
+    const likeButton = document.getElementById('like-button');
+
+    let currentVideoIndex = null;
+
+    function createThumbnail(video, index) {
+      const thumb = document.createElement('div');
+      thumb.className = 'thumbnail';
+      thumb.innerHTML = `
+        <img src="${video.thumbnail}" alt="Thumbnail of ${video.title}">
+        <div class="title-overlay">${video.title}</div>
+      `;
+      thumb.addEventListener('click', () => {
+        loadVideo(index);
+      });
+      return thumb;
+    }
+
+    function loadVideo(index) {
+      const video = videos[index];
+      currentVideoIndex = index;
+      videoPlayer.src = video.src;
+      videoTitle.textContent = `Title: ${video.title}`;
+      videoTags.textContent = `Tags: ${video.tags}`;
+      videoPerformer.textContent = `Performer: ${video.performer}`;
+      videoStudio.textContent = `Studio: ${video.studio}`;
+      videoPlayerContainer.style.display = 'flex';
+      videoPlayer.focus();
+    }
+
+    likeButton.addEventListener('click', () => {
+      if(currentVideoIndex !== null){
+        alert(`You liked: ${videos[currentVideoIndex].title}\n(Recommendations coming soon!)`);
+      }
+    });
+
+    function init() {
+      videos.forEach((video, index) => {
+        const thumb = createThumbnail(video, index);
+        thumbnailGrid.appendChild(thumb);
       });
     }
 
-    function likeVideo(index) {
-      alert(`You liked: ${videos[index].title}\n(Recommendation engine coming soon!)`);
-    }
-
-    window.onload = loadVideos;
+    window.onload = init;
   </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
