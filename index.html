@@ -2,58 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Porn Aggregator with Fixed Header</title>
+  <title>Porn Aggregator with Styled Header</title>
   <style>
+    /* Apply a font similar to the banner for a consistent look */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+
     body {
       margin: 0; 
       background: #222; 
-      color: #fff; 
-      font-family: Arial, sans-serif; 
+      color: #f5f5f5; 
+      font-family: 'Montserrat', Arial, sans-serif; 
       height: 100vh;
       display: flex; 
       flex-direction: column;
     }
     header {
-      background: #111; 
-      padding: 15px 20px;
-      position: fixed; /* Stay on top */
-      top: 0; 
-      width: 100%; 
+      background: url('https://raw.githubusercontent.com/thedeucetrey/main/main/b6ef7d3a-fa47-4b7d-9e66-6f0c4cfe01fd.png') no-repeat center center;
+      background-size: cover;
+      padding: 30px 20px 25px; /* Adjusted padding to give space for text */
+      position: fixed;
+      top: 0;
+      width: 100%;
       z-index: 1000;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.7);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      color: #f5f5f5;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
     }
     header h1 {
       margin: 0;
-      font-size: 1.5rem;
+      font-weight: 600;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
     }
     #disclaimer {
-      font-size: 0.8rem;
-      color: #bbb;
-      margin-top: 4px;
+      font-size: 0.85rem;
+      color: #ddd;
+      margin-top: 6px;
+      font-weight: 400;
+      font-family: 'Montserrat', Arial, sans-serif;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
     }
     main {
-      margin-top: 90px; /* Enough space to avoid overlap with fixed header */
+      margin-top: 110px; /* Space for fixed header */
       padding: 20px;
       flex-grow: 1;
       overflow-y: auto;
     }
 
-    /* Basic video box style */
+    /* Video block styling */
     .video-container {
-      background: #333;
+      background: #2d2d2d;
       padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      max-width: 600px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      max-width: 650px;
+      box-shadow: 0 0 14px rgba(233, 119, 119, 0.6);
+      transition: box-shadow 0.3s ease;
     }
-    .video-title { font-size: 1.5rem; margin-bottom: 10px; }
-    iframe { border-radius: 8px; }
-    .tags { margin: 10px 0; }
+    .video-container:hover {
+      box-shadow: 0 0 30px rgba(233, 119, 119, 1);
+    }
+
+    .video-title { 
+      font-size: 1.7rem; 
+      margin-bottom: 12px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      color: #f9a7a7;
+      text-shadow: 1px 1px 2px #661212;
+    }
+    iframe { 
+      border-radius: 10px; 
+      width: 100%; 
+      height: 360px; 
+      max-width: 650px; 
+    }
+    .tags {
+      margin: 12px 0;
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: #f8d7d7;
+      letter-spacing: 0.5px;
+    }
+    .tags b {
+      color: #e66363;
+      text-shadow: 1px 1px 3px #3a0d0d;
+    }
     .like-btn {
-      background: #E97777; border: none; border-radius: 8px; padding: 10px 18px; 
-      color: white; cursor: pointer; font-size: 1rem;
+      background: #e97777;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px; 
+      color: white; 
+      cursor: pointer; 
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 8px rgba(233, 119, 119, 0.7);
+      transition: background-color 0.25s ease;
     }
-    .like-btn:active { background: #BE3144; }
+    .like-btn:active {
+      background: #be3144;
+      box-shadow: 0 2px 6px rgba(190, 49, 68, 0.9);
+    }
   </style>
 </head>
 <body>
@@ -66,11 +117,11 @@
   </header>
 
   <main id="content">
-    <!-- Content will be loaded here -->
+    <!-- Videos will load here -->
   </main>
 
   <script>
-    // Sample video data (you'll add more later)
+    // Array of videos for demo
     const videos = [
       {
         title: "Example Video 1",
@@ -88,15 +139,16 @@
       }
     ];
 
-    // Function to load a video block into #content
+    // Load videos into main content area
     function loadVideos() {
       const contentDiv = document.getElementById('content');
-      contentDiv.innerHTML = ''; // Clear current content
+      contentDiv.innerHTML = ''; // Clear existing content
+
       videos.forEach((v, i) => {
         const videoHTML = `
           <div class="video-container">
             <div class="video-title">${v.title}</div>
-            <iframe width="560" height="315" src="${v.src}" frameborder="0" allowfullscreen></iframe>
+            <iframe src="${v.src}" frameborder="0" allowfullscreen></iframe>
             <div class="tags">Tags: <b>${v.tags}</b></div>
             <div class="tags">Performer: <b>${v.performer}</b></div>
             <div class="tags">Studio: <b>${v.studio}</b></div>
@@ -107,13 +159,13 @@
       });
     }
 
-    // Like button function
+    // Like button functionality
     function likeVideo(index) {
-      alert(`You liked: ${videos[index].title}\n(This will update recommendations soon)`);
-      // Here you will save the like info for the user
+      alert(`You liked: ${videos[index].title}\n(Recommendation engine coming soon!)`);
+      // Here you can add code to store user preference for recommendations
     }
 
-    // Load videos when the page loads
+    // Load videos once page is ready
     window.onload = loadVideos;
   </script>
 
